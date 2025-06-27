@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef _EE_PMW3901MB_LIB_
-#define _EE_PMW3901MB_LIB_
+#ifndef _EE_PMW3901MB_PLATFORM_
+#define _EE_PMW3901MB_PLATFORM_
 
 
 #ifdef __cplusplus
@@ -37,9 +37,10 @@ extern "C"
 
 
 
+
 #ifdef __cplusplus
 }
 #endif
 
 
-#endif /* _EE_PMW3901MB_LIB_ */
+#endif /* _EE_PMW3901MB_PLATFORM_ */

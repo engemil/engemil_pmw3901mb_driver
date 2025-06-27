@@ -22,24 +22,5 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef _EE_PMW3901MB_LIB_
-#define _EE_PMW3901MB_LIB_
+#include "ee_pmw3901mb_platform.h"
 
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-
-
-
-
-
-
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif /* _EE_PMW3901MB_LIB_ */
