@@ -25,6 +25,7 @@ SOFTWARE.
 #include "ch.h"
 #include "hal.h"
 #include "chprintf.h"
+#include "ee_pmw3901mb_driver.h"
 
 /* Serial / Virtual COM Port related */
 #define VIRTUAL_COM_TX_LINE         LINE_VCP_TX // UART2_TX (PA2)
@@ -59,17 +60,17 @@ SOFTWARE.
 #define SPI_CS_LINE         LINE_ARD_A3 // "Chip Select" (PA4)
 #define SPI_CS_LINE_MODE    PAL_MODE_ALTERNATE(0U) /* AF0: (default) */| \
                             PAL_STM32_OTYPE_PUSHPULL | \
-                            PAL_STM32_PUPDR_FLOATING /* PAL_STM32_PUPDR_PULLDOWN */ | \
+                            PAL_STM32_PUPDR_FLOATING /* PAL_STM32_PUPDR_PULLUP */ | \
                             PAL_STM32_OSPEED_HIGHEST
 #define MOT_INT_LINE        LINE_ARD_A2 // "Motion Interrupt" (PA3)
 #define MOT_INT_LINE_MODE   PAL_MODE_ALTERNATE(0U) /* AF0: (default) */| \
                             PAL_STM32_OTYPE_PUSHPULL | \
-                            PAL_STM32_PUPDR_FLOATING /* PAL_STM32_PUPDR_PULLDOWN */ | \
+                            PAL_STM32_PUPDR_FLOATING /* PAL_STM32_PUPDR_PULLUP */ | \
                             PAL_STM32_OSPEED_HIGHEST
 #define RESET_LINE          LINE_ARD_A1 // "Reset" (PA1)
 #define RESET_LINE_MODE     PAL_MODE_ALTERNATE(0U) /* AF0: (default) */| \
                             PAL_STM32_OTYPE_PUSHPULL | \
-                            PAL_STM32_PUPDR_FLOATING /* PAL_STM32_PUPDR_PULLDOWN */ | \
+                            PAL_STM32_PUPDR_FLOATING /* PAL_STM32_PUPDR_PULLUP */ | \
                             PAL_STM32_OSPEED_HIGHEST
 #define my_spi_driver (&SPID1)
 

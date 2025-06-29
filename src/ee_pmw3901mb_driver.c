@@ -24,10 +24,31 @@ SOFTWARE.
 
 #include "ee_pmw3901mb_driver.h"
 
+// Registers List
+#define REG_PRODUCT_ID          0x00 // RO
+#define REG_REVISION_ID         0x01 // RO
+#define REG_MOTION              0x02 // R/W
+#define REG_DELTA_X_L           0x03 // RO
+#define REG_DELTA_X_H           0x04 // RO
+#define REG_DELTA_Y_L           0x05 // RO
+#define REG_DELTA_Y_H           0x06 // RO
+#define REG_SQUAL               0x07 // RO
+#define REG_RAWDATA_SUM         0x08 // RO
+#define REG_MAXIMUM_RAWDATA     0x09 // RO
+#define REG_MINIMUM_RAWDATA     0x0A // RO
+#define REG_SHUTTER_LOWER       0x0B // RO
+#define REG_SHUTTER_UPPER       0x0C // RO
+#define REG_OBSERVATION         0x15 // R/W
+#define REG_MOTION_BURST        0x16 // RO
+#define REG_POWER_UP_RESET      0x3A // WO
+#define REG_SHUTDOWN            0x3B // WO
+#define REG_RAWDATA_GRAB        0x58 // R/W
+#define REG_RAWDATA_GRAB_STATUS 0x59 // RO
+#define REG_INVERSE_PRODUCT_ID  0x5F // RO
 
-// SPI related
-#define SPI_RW_BIT_READ         0x00
-#define SPI_RW_BIT_WRITE        0x80
+// Register Default Values
+#define DEF_REG_PRODUCT_ID          0x49
+#define DEF_REG_REVERSE_PRODUCT_ID  0xB6
 
 // Performance Optimization Registers (PixArt proprietary information, hence address used as name)
 #define PER_REG_0x40            0x40
@@ -43,36 +64,11 @@ SOFTWARE.
 #define PER_REG_0x7F            0x7F
 
 
-uint8_t ee_pmw3901mb_spi_init(SPIDriver* spidriver){
-    return 0;
+uint8_t ee_pmw3901mb_get_product_id(uin8t_t* product_id){
+    uint8_t status_code = 0U;
+    status_code = ee_pmw3901mb_spi_read(REG_PRODUCT_ID, product_id, 1U);
+    return status_code; // Success
 }
 
-uint8_t ee_pmw3901mb_spi_deinit(SPIDriver* spidriver){
-    return 0;
-}
+// TODO: continue adding functions
 
-uint8_t ee_pmw3901mb_spi_read(SPIDriver* spidriver, uint8_t addr, uint16_t* data, uint8_t len){
-
-    // reg |= SPI_RW_BIT_READ;
-
-    // TODO: TEST and REWRITE
-
-    uint8_t txbuf[2], rxbuf[2];
-    /* Preparing the transmission buffer. */
-    txbuf[0] = (SPI_RW_BIT_READ << 7) | ((addr) << 0);
-    /* Performing an exchange. */
-    spiSelect(spidriver);
-    spiExchange(spidriver, 2, txbuf, rxbuf);
-    spiUnselect(spidriver);
-    *data = rxbuf[1];
-
-    return 0;
-}
-
-uint8_t ee_pmw3901mb_spi_write(SPIDriver* spidriver, uint8_t addr, uint16_t* data, uint8_t len){
-    return 0;
-}
-
-uint8_t ee_pmw3901mb_spi_write_perf_opt(SPIDriver* spidriver){
-    return 0;
-}

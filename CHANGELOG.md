@@ -6,3 +6,5 @@ v0.0.1 (2025-xx-xx)
 
 * First iteration
 * Added doxygen as documentation generator
+* Separating driver (core) and platform specific code
+

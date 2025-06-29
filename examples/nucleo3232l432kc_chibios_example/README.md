@@ -20,13 +20,13 @@ This example is with the STM32 Nucleo32 Nucleo-L432KC (STM32L432KC) board.
 | PMW3901MB Module Pin | STM32L32KC Pin | NUCLEO-L432KC Arduino Connector Pin | Function |
 | --- | --- | --- | --- |
 | 3V3 | - | 3V3 | 3.3V power source |
-| RST | - | - | - |
-| MOT | - | - | - |
-| MOSI | - | - | - |
-| SCLK | - | - | - |
-| MISO | - | - | - |
-| CS | - | - | - |
-| GND | - | GND | Ground |
+| RST | PA1 | `LINE_ARD_A1` | Reset pin (input) |
+| MOT | PA3 | `LINE_ARD_A2` | Motion Interrupt (output) |
+| MOSI | PA7 | `LINE_ARD_A6` | SPI MOSI (Master Out Slave In) |
+| SCLK | PA5 | `LINE_ARD_A4` | SPI SCLK (Serial Clock) |
+| MISO | PA6 | `LINE_ARD_A5` | SPI MOSI (Master Out Slave In) |
+| CS | PA4 | `LINE_ARD_A3` | SPI CS (Chip Select) |
+| GND | GND | - | Ground |
 
 (insert image of wiring)
 
