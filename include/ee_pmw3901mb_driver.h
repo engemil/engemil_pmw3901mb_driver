@@ -22,7 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "ee_pmw3901mb_lib.h"
+/**
+ * @file ee_pmw3901mb_driver.h
+ * 
+ * @brief EngEmil PMW3901MB Driver.
+ * 
+ */
+
+#ifndef _EE_PMW3901MB_DRIVER_
+#define _EE_PMW3901MB_DRIVER_
+
+#include <stdint.h>
+#include "hal.h"
 
 // Registers List
 #define REG_PRODUCT_ID          0x00 // RO
@@ -46,19 +57,64 @@ SOFTWARE.
 #define REG_RAWDATA_GRAB_STATUS 0x59 // RO
 #define REG_INVERSE_PRODUCT_ID  0x5F // RO
 
-// Performance Optimization Registers (PixArt proprietary information, hence address used as name)
-#define PER_REG_0x40            0x40
-#define PER_REG_0x41            0x41
-#define PER_REG_0x43            0x43
-#define PER_REG_0x44            0x44
-#define PER_REG_0x45            0x45
-#define PER_REG_0x4E            0x4E
-#define PER_REG_0x5B            0x5B
-#define PER_REG_0x5F            0x5F
-#define PER_REG_0x61            0x61
-#define PER_REG_0x7B            0x7B
-#define PER_REG_0x7F            0x7F
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 
+/**
+ * @brief Initialize SPI.
+ * 
+ * @param[in] spidriver pointer to the platform specific SPI driver
+ * @return uint8_t status code, 0 success, nonzero on error
+ *           
+ */
+uint8_t ee_pmw3901mb_spi_init(SPIDriver* spidriver);
+
+/**
+ * @brief Deinitialize SPI.
+ * 
+ * @param[in] spidriver pointer to the platform specific SPI driver
+ * @return uint8_t status code, 0 success, nonzero on error
+ */
+uint8_t ee_pmw3901mb_spi_deinit(SPIDriver* spidriver);
+
+/**
+ * @brief Read value from register address over SPI.
+ * 
+ * @param[in] spidriver pointer to the platform specific SPI driver
+ * @param[in] addr register address
+ * @param[out] data pointer to a data buffer 
+ * @param[in] len length of data buffer
+ * @return uint8_t status code, 0 success, nonzero on error
+ */
+uint8_t ee_pmw3901mb_spi_read(SPIDriver* spidriver, uint8_t addr, uint8_t* data, uint8_t len);
+
+/**
+ * @brief Write value to register address over SPI.
+ * 
+ * @param[in] spidriver pointer to the platform specific SPI driver
+ * @param[in] addr register address
+ * @param[in] data pointer to a data buffer
+ * @param[in] len length of data buffer
+ * @return uint8_t status code, 0 success, nonzero on error
+ */
+uint8_t ee_pmw3901mb_spi_write(SPIDriver* spidriver, uint8_t addr, uint8_t* data, uint8_t len);
+
+/**
+ * @brief Run the PMW3901MB performance optimization sequence with the performance optimization registers, as defined in the datasheet.
+ * 
+ * @param[in] spidriver pointer to the platform specific SPI driver
+ * @return uint8_t status code, 0 success, nonzero on error
+ */
+uint8_t ee_pmw3901mb_perf_opt(SPIDriver* spidriver);
 
 
+#ifdef __cplusplus
+}
+#endif
+
+
+#endif /* _EE_PMW3901MB_DRIVER_ */

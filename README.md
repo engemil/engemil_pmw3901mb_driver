@@ -1,6 +1,10 @@
-# EngEmil PMW3901MB Library
+# EngEmil PMW3901MB DRIVER
 
-PMW3901MB Firmware Library written in C
+A PMW3901MB driver written in C.
 
 
 Status: **WORK-IN-PROGRESS**
+
+
+
+
