@@ -93,9 +93,10 @@ static SPIConfig my_spi_cfg = {
     .slave      = false,                        // Master mode
     .data_cb    = NULL,                         // No callback
     .error_cb   = NULL,                         // No callback
-    .ssline     = SPI_CS_LINE,        // Chip Select Pin
+    .ssline     = SPI_CS_LINE,                  // Chip Select Pin
     .cr1        = SPI_CR1_BR_2 | SPI_CR1_BR_0 | // BR = 0b0101 => 1.25MHz (f_PCLK/64). Nucleo-L432KC default STM32_PCLK2 (used by SPI1) is 80MHz.
-                  0,                            // CPOL = 0 (CLK 0 at idle), CPHA = 0 (1st CLK trans data capture edge), MSTR = 0 (is set by chibios), and more...
+                  SPI_CR1_CPOL | SPI_CR1_CPHA | // (SPI Mode 3) CPOL = 1 (CLK 1 at idle) and CPHA = 1 (2nd CLK trans data capture edge), 
+                  0,                            // MSTR = 0 (is set by chibios), and more...
     .cr2        = SPI_CR2_DS_0 | SPI_CR2_DS_1 | SPI_CR2_DS_2 | // DS = 0b0111 (8-bit data length)
                   0                                            // FRF = 0 (Motorola Mode), and more...
 };
@@ -137,18 +138,25 @@ int main(void) {
     palSetLineMode(MOT_INT_LINE, MOT_INT_LINE_MODE);
     palSetLineMode(RESET_LINE, RESET_LINE_MODE);
 
-    spiStart(my_spi_driver, &my_spi_cfg);
-    //spiStop();
-
     /* Print initial message */
     chprintf(my_serial_stream, "Starting...\r\n");
 
     // Main Thread
     while (true) {
+
+        spiAcquireBus(my_spi_driver);
+
+        spiStart(my_spi_driver, &my_spi_cfg);
+
+        uint8_t pmw3901mb_product_id = 0;
+        uint8_t status_code = 0;
+
+        status_code = ee_pmw3901mb_get_product_id(*pmw3901mb_product_id);
+
+        chprintf(my_serial_stream, "Status code: %d \r\n", status_code);
+        chprintf(my_serial_stream, "PMW3901MB Production ID: 0x%02X \r\n", pmw3901mb_product_id);
         
-        //chprintf(my_serial_stream, "Running...\r\n");
-        // uint8_t test = 0;
-        //chprintf(my_serial_stream, "Test: %d \r\n", Test);
+        spiReleaseBus(my_spi_driver);
         
         chThdSleepMilliseconds(1000);
     }

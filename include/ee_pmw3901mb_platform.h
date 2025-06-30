@@ -85,12 +85,12 @@ uint8_t ee_pmw3901mb_spi_read(uint8_t addr, uint8_t* data, size_t n);
 uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data, size_t n);
 
 /**
- * @brief Run the PMW3901MB performance optimization sequence with the performance optimization registers, as defined in the datasheet.
- * @pre The SPI Driver must be initialized and the driver started.
+ * @brief Wait in milliseconds with platform specific function
  * 
- * @return uint8_t status code, 0 success, nonzero on error
+ * @param[in] wait_ms milliseconds
+ * @return uint8_t status code, 0 success, nonzero on error 
  */
-uint8_t ee_pmw3901mb_perf_opt(void);
+uint8_t ee_pmw3901mb_wait_ms(uint32_t wait_ms);
 
 
 #ifdef __cplusplus

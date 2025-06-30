@@ -93,9 +93,8 @@ uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data, size_t n){
     return 0; // Success
 }
 
-uint8_t ee_pmw3901mb_spi_write_perf_opt(void){
-
-    // TODO
-
-    return 0; // Success
+uint8_t ee_pmw3901mb_wait_ms(uint32_t wait_ms){
+    chThdSleepMilliseconds(wait_ms);
+    return 0;
 }
+
