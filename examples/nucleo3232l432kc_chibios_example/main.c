@@ -86,7 +86,7 @@ static const SerialConfig my_serial_cfg = {
  * Non-circular SPI.
  * No slave.
  * No callbacks (error and data)
- * CR1: BR = 0b0101 (f_PCLK/64 prescaler). CR2: DS = 0b0111 (8-bit data length)
+ * CR1: BR = 0b0101 (f_PCLK/64 prescaler), CPOL = 1 CPHA = 1 (SPI Mode 3). CR2: DS = 0b0111 (8-bit data length)
  */
 static SPIConfig my_spi_cfg = {
     .circular   = false,                        // Non-circular mode
@@ -144,6 +144,8 @@ int main(void) {
     uint8_t product_id = 0x00;
     uint8_t status_code = 0x00;
 
+    ee_pmw3901mb_spi_init(my_spi_driver);
+
     // Main Thread
     while (true) {
 
@@ -159,6 +161,7 @@ int main(void) {
             chprintf(my_serial_stream, "Product ID: 0x%02X \r\n", product_id);
         }else{
             chprintf(my_serial_stream, "Failed to read product ID!\r\n");
+            chprintf(my_serial_stream, "Status Code: 0x%02X \r\n", status_code);
         }
 
         status_code = 0x00;

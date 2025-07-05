@@ -37,7 +37,6 @@ static SPIDriver* spi_driver = NULL;
 
 uint8_t ee_pmw3901mb_spi_init(SPIDriver* spid_p){
     if(spid_p == NULL) return 1; // Error: NULL pointer passed
-    if(spid_p != NULL) return 2; // Error: Already Initialized
 
     spi_driver = spid_p;
     return 0; // Success
