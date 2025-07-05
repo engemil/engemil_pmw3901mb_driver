@@ -141,24 +141,31 @@ int main(void) {
     /* Print initial message */
     chprintf(my_serial_stream, "Starting...\r\n");
 
+    uint8_t product_id = 0x00;
+    uint8_t status_code = 0x00;
+
     // Main Thread
     while (true) {
 
-        spiAcquireBus(my_spi_driver);
+        chprintf(my_serial_stream, "Checking product ID...\r\n");
 
         spiStart(my_spi_driver, &my_spi_cfg);
 
-        uint8_t pmw3901mb_product_id = 0;
-        uint8_t status_code = 0;
+        status_code = ee_pmw3901mb_get_product_id(&product_id);
 
-        status_code = ee_pmw3901mb_get_product_id(*pmw3901mb_product_id);
+        spiStop(my_spi_driver);
 
-        chprintf(my_serial_stream, "Status code: %d \r\n", status_code);
-        chprintf(my_serial_stream, "PMW3901MB Production ID: 0x%02X \r\n", pmw3901mb_product_id);
-        
-        spiReleaseBus(my_spi_driver);
-        
+        if(status_code == 0){
+            chprintf(my_serial_stream, "Product ID: 0x%02X \r\n", product_id);
+        }else{
+            chprintf(my_serial_stream, "Failed to read product ID!\r\n");
+        }
+
+        status_code = 0x00;
+        product_id = 0x00;
+
         chThdSleepMilliseconds(1000);
     }
 
 }
+

@@ -30,21 +30,21 @@ SOFTWARE.
 
 // Include platform dependent macros and variables here
 
-static volatile SPIDriver* spi_driver = NULL;
+static SPIDriver* spi_driver = NULL;
 
 
 // Include platform dependent function headers here
 
 uint8_t ee_pmw3901mb_spi_init(SPIDriver* spid_p){
-    if(spid_P == NULL) return 1; // Error: NULL pointer passed
-    if(spid_P != NULL) return 2; // Error: Already Initialized
+    if(spid_p == NULL) return 1; // Error: NULL pointer passed
+    if(spid_p != NULL) return 2; // Error: Already Initialized
 
-    spid_p = spi_driver;
+    spi_driver = spid_p;
     return 0; // Success
 }
 
 uint8_t ee_pmw3901mb_spi_deinit(void){
-    if(spid_P == NULL) return 1; // Error: Not initialized / Already Deinitialized
+    if(spi_driver == NULL) return 1; // Error: Not initialized / Already Deinitialized
 
     spi_driver = NULL;
 
@@ -54,7 +54,7 @@ uint8_t ee_pmw3901mb_spi_deinit(void){
 uint8_t ee_pmw3901mb_spi_read(uint8_t addr, uint8_t* data, size_t n){
     
     if(spi_driver == NULL) return 1; // Error: SPI Driver is NULL
-    if(len == 0U || len > ) return 2; // Error: Invalid length
+    if(n == 0U || n > 8U) return 2; // Error: Invalid length
 
     uint8_t txbuf = 0;
     /* Preparing the transmission buffer with R/W bit to Read. */
@@ -75,7 +75,7 @@ uint8_t ee_pmw3901mb_spi_read(uint8_t addr, uint8_t* data, size_t n){
 uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data, size_t n){
 
     if(spi_driver == NULL) return 1; // Error: SPI Driver is NULL
-    if(len == 0U || len > ) return 2; // Error: Invalid length
+    if(n == 0U || n > 8U) return 2; // Error: Invalid length
 
     uint8_t txbuf = 0;
     /* Preparing the transmission buffer with R/W bit to Write. */

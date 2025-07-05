@@ -12,7 +12,7 @@ This example is with the STM32 Nucleo32 Nucleo-L432KC (STM32L432KC) board.
 
 ## NUCLEO-L432KC Pinout
 
-<img src="images/nucleo_l432kc_board.png" alt="Alt text" width="600"/>
+<img src="images/nucleo_l432kc_board.png" alt="Alt text" width="800"/>
 
 
 ## Wiring EngEmil PMW3901MB Module to the NUCLEO-L432KC board
