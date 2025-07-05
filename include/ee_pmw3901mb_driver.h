@@ -42,6 +42,16 @@ extern "C"
 
 
 /**
+ * @brief Initialize EngEmil PMW3901MB Driver.
+ * 
+ * @param[in] spid_p pointer to the platform specific SPI driver
+ * @param[in] spic_p pointer to the platform specific SPI Config
+ * @return uint8_t status code, 0 success, nonzero on error
+ */
+uint8_t ee_pmw3901mb_init_driver(void* spid_p, void* spic_p);
+
+
+/**
  * @brief Get Product ID
  * 
  * @param[out] product_id pointer to the return value

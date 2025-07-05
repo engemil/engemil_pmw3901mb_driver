@@ -31,14 +31,15 @@ SOFTWARE.
 // Include platform dependent macros and variables here
 
 static SPIDriver* spi_driver = NULL;
-
+static SPIConfig* spi_config = NULL;
 
 // Include platform dependent function headers here
 
-uint8_t ee_pmw3901mb_spi_init(SPIDriver* spid_p){
+uint8_t ee_pmw3901mb_spi_init(SPIDriver* spid_p, SPIConfig* spic_p){
     if(spid_p == NULL) return 1; // Error: NULL pointer passed
 
     spi_driver = spid_p;
+    spi_config = spic_p;
     return 0; // Success
 }
 
@@ -59,6 +60,7 @@ uint8_t ee_pmw3901mb_spi_read(uint8_t addr, uint8_t* data, size_t n){
     /* Preparing the transmission buffer with R/W bit to Read. */
     txbuf = (SPI_RW_BIT_READ_MASK & addr);
 
+    spiStart(spi_driver, &spi_config);
     spiSelect(spi_driver);
     
     /* Sending the command. The data coming back is ignored. */
@@ -67,6 +69,7 @@ uint8_t ee_pmw3901mb_spi_read(uint8_t addr, uint8_t* data, size_t n){
     spiReceive(spi_driver, n, data);
 
     spiUnselect(spi_driver);
+    spiStop(spi_driver);
 
     return 0; // Success
 }
@@ -80,6 +83,7 @@ uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data, size_t n){
     /* Preparing the transmission buffer with R/W bit to Write. */
     txbuf = (SPI_RW_BIT_WRITE_MASK | addr);
 
+    spiStart(spi_driver, &spi_config);
     spiSelect(spi_driver);
     
     /* Sending the command. The data coming back is ignored. */
@@ -88,6 +92,7 @@ uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data, size_t n){
     spiReceive(spi_driver, n, data);
 
     spiUnselect(spi_driver);
+    spiStop(spi_driver);
 
     return 0; // Success
 }

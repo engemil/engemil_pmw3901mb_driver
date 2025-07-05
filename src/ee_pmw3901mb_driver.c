@@ -64,6 +64,21 @@ SOFTWARE.
 #define PER_REG_0x7F            0x7F
 
 
+uint8_t ee_pmw3901mb_init_driver(void* spi_driver, void* spi_config){
+    if(spi_driver == NULL) return 1;
+
+    uint8_t status_code = 0;
+
+    status_code = ee_pmw3901mb_spi_init(spi_driver, spi_config);
+    if(status_code != 0) return 1;
+
+    ee_pmw3901mb_power_up_reset();
+    if(status_code != 0) return 1;
+    ee_pmw3901mb_wait_ms(50U); // Wait while system resets
+
+    return 0;
+}
+
 uint8_t ee_pmw3901mb_get_product_id(uint8_t* product_id){
     if(product_id == NULL) return 1;
     return ee_pmw3901mb_spi_read(REG_PRODUCT_ID, product_id, 1U);

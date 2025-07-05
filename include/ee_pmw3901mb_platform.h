@@ -49,11 +49,11 @@ extern "C"
 /**
  * @brief Initialize SPI.
  * 
- * @param[in] spidriver pointer to the platform specific SPI driver
+ * @param[in] spid_p pointer to the platform specific SPI driver
+ * @param[in] spic_p pointer to the platform specific SPI Config
  * @return uint8_t status code, 0 success, nonzero on error
- *           
  */
-uint8_t ee_pmw3901mb_spi_init(SPIDriver* spidriver);
+uint8_t ee_pmw3901mb_spi_init(SPIDriver* spidriver, SPIConfig* spic_p);
 
 /**
  * @brief Deinitialize SPI.

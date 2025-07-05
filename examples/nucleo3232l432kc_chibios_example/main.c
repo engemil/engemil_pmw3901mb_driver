@@ -44,34 +44,22 @@ SOFTWARE.
 /* SPI related */
 #define SPI_MOSI_LINE       LINE_ARD_A6 // SPI1_MOSI (PA7)
 #define SPI_MOSI_LINE_MODE  PAL_MODE_ALTERNATE(5U) /* AF5: SPI1_MOSI */ | \
-                            PAL_STM32_OTYPE_PUSHPULL | \
-                            PAL_STM32_PUPDR_FLOATING | \
                             PAL_STM32_OSPEED_HIGHEST
 #define SPI_MISO_LINE       LINE_ARD_A5 // SPI1_MISO (PA6)
 #define SPI_MISO_LINE_MODE  PAL_MODE_ALTERNATE(5U) /* AF5: SPI1_MISO */ | \
-                            PAL_STM32_OTYPE_PUSHPULL | \
-                            PAL_STM32_PUPDR_FLOATING | \
+                            PAL_STM32_PUPDR_PULLUP /* Added SW PULL-UP (No HW PULL-UP on module) */ | \
                             PAL_STM32_OSPEED_HIGHEST
 #define SPI_SCLK_LINE       LINE_ARD_A4 // SPI1_SCLK (PA5)
 #define SPI_SCLK_LINE_MODE  PAL_MODE_ALTERNATE(5U) /* AF5: SPI1_SCK */| \
-                            PAL_STM32_OTYPE_PUSHPULL | \
-                            PAL_STM32_PUPDR_FLOATING | \
                             PAL_STM32_OSPEED_HIGHEST
 #define SPI_CS_LINE         LINE_ARD_A3 // "Chip Select" (PA4)
-#define SPI_CS_LINE_MODE    PAL_MODE_ALTERNATE(0U) /* AF0: (default) */| \
-                            PAL_STM32_OTYPE_PUSHPULL | \
-                            PAL_STM32_PUPDR_FLOATING /* PAL_STM32_PUPDR_PULLUP */ | \
-                            PAL_STM32_OSPEED_HIGHEST
+#define SPI_CS_LINE_MODE    PAL_MODE_OUTPUT_PUSHPULL | \
+                            PAL_STM32_PUPDR_PULLUP /* Added SW PULL-UP (No HW PULL-UP on module) */
 #define MOT_INT_LINE        LINE_ARD_A2 // "Motion Interrupt" (PA3)
-#define MOT_INT_LINE_MODE   PAL_MODE_ALTERNATE(0U) /* AF0: (default) */| \
-                            PAL_STM32_OTYPE_PUSHPULL | \
-                            PAL_STM32_PUPDR_FLOATING /* PAL_STM32_PUPDR_PULLUP */ | \
-                            PAL_STM32_OSPEED_HIGHEST
+#define MOT_INT_LINE_MODE   PAL_MODE_OUTPUT_PUSHPULL | \
+                            PAL_STM32_PUPDR_PULLUP /* Added SW PULL-UP (No HW PULL-UP on module) */
 #define RESET_LINE          LINE_ARD_A1 // "Reset" (PA1)
-#define RESET_LINE_MODE     PAL_MODE_ALTERNATE(0U) /* AF0: (default) */| \
-                            PAL_STM32_OTYPE_PUSHPULL | \
-                            PAL_STM32_PUPDR_FLOATING /* PAL_STM32_PUPDR_PULLUP */ | \
-                            PAL_STM32_OSPEED_HIGHEST
+#define RESET_LINE_MODE     PAL_MODE_OUTPUT_PUSHPULL  /* No need for SW PULL-UP (Module has HW PULL-UP) */
 #define my_spi_driver (&SPID1)
 
 /* Serial Configuration for Virtual COM Port */
@@ -144,18 +132,14 @@ int main(void) {
     uint8_t product_id = 0x00;
     uint8_t status_code = 0x00;
 
-    ee_pmw3901mb_spi_init(my_spi_driver);
+    ee_pmw3901mb_init_driver(my_spi_driver, &my_spi_cfg);
 
     // Main Thread
     while (true) {
 
         chprintf(my_serial_stream, "Checking product ID...\r\n");
 
-        spiStart(my_spi_driver, &my_spi_cfg);
-
         status_code = ee_pmw3901mb_get_product_id(&product_id);
-
-        spiStop(my_spi_driver);
 
         if(status_code == 0){
             chprintf(my_serial_stream, "Product ID: 0x%02X \r\n", product_id);
