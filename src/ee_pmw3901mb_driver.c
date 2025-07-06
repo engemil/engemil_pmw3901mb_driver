@@ -72,10 +72,12 @@ uint8_t ee_pmw3901mb_init_driver(void* spi_driver, void* spi_config){
     status_code = ee_pmw3901mb_spi_init(spi_driver, spi_config);
     if(status_code != 0) return 1;
 
-    ee_pmw3901mb_power_up_reset();
+    status_code = ee_pmw3901mb_power_up_reset();
     if(status_code != 0) return 1;
-    ee_pmw3901mb_wait_ms(50U); // Wait while system resets
-
+    
+    status_code = ee_pmw3901mb_wait_ms(50U); // Wait while system resets
+    if(status_code != 0) return 1;
+    
     return 0;
 }
 

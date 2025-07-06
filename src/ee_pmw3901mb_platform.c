@@ -89,7 +89,8 @@ uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data, size_t n){
     /* Sending the command. The data coming back is ignored. */
     spiSend(spi_driver, 1U, &txbuf);
     /* Writing as many register as the value of n. */
-    spiReceive(spi_driver, n, data);
+    // TODO: Figure out why this crashes the system!
+    //spiSend(spi_driver, n, data);
 
     spiUnselect(spi_driver);
     spiStop(spi_driver);
