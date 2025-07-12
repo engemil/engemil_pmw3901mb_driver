@@ -33,6 +33,7 @@ SOFTWARE.
 #define _EE_PMW3901MB_PLATFORM_
 
 #include <stdint.h>
+#include <string.h>
 
 // Include platform dependent files here
 #include "hal.h"
@@ -79,10 +80,9 @@ uint8_t ee_pmw3901mb_spi_read(uint8_t addr, uint8_t* data, size_t n);
  * 
  * @param[in] addr starting register address
  * @param[out] data pointer to data buffer
- * @param[in] n number of consecutive registers to write
  * @return uint8_t status code, 0 success, nonzero on error
  */
-uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data, size_t n);
+uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data);
 
 /**
  * @brief Wait in milliseconds with platform specific function

@@ -67,8 +67,13 @@ uint8_t ee_pmw3901mb_get_product_id(uint8_t* product_id);
  */
 uint8_t ee_pmw3901mb_get_revision_id(uint8_t* revision_id);
 
-// (?)
-//uint8_t ee_pmw3901mb_get_motion(void);
+/**
+ * @brief Get Motion
+ * 
+ * @param[out] motion pointer to the return value 
+ * @return uint8_t status code, 0 success, nonzero on error
+ */
+uint8_t ee_pmw3901mb_get_motion(uint8_t* motion);
 
 // (?)
 //uint8_t ee_pmw3901mb_set_motion(void);

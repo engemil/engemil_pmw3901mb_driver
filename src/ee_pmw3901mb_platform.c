@@ -37,6 +37,7 @@ static SPIConfig* spi_config = NULL;
 
 uint8_t ee_pmw3901mb_spi_init(SPIDriver* spid_p, SPIConfig* spic_p){
     if(spid_p == NULL) return 1; // Error: NULL pointer passed
+    if(spic_p == NULL) return 2; // Error: NULL pointer passed
 
     spi_driver = spid_p;
     spi_config = spic_p;
@@ -44,9 +45,10 @@ uint8_t ee_pmw3901mb_spi_init(SPIDriver* spid_p, SPIConfig* spic_p){
 }
 
 uint8_t ee_pmw3901mb_spi_deinit(void){
-    if(spi_driver == NULL) return 1; // Error: Not initialized / Already Deinitialized
+    if(spi_driver == NULL || spi_config == NULL) return 1; // Error: Not initialized / Already Deinitialized
 
     spi_driver = NULL;
+    spi_config = NULL;
 
     return 0;
 }
@@ -54,7 +56,7 @@ uint8_t ee_pmw3901mb_spi_deinit(void){
 uint8_t ee_pmw3901mb_spi_read(uint8_t addr, uint8_t* data, size_t n){
     
     if(spi_driver == NULL) return 1; // Error: SPI Driver is NULL
-    if(n == 0U || n > 8U) return 2; // Error: Invalid length
+    if(n < 1) return 2; // Error: Invalid size
 
     uint8_t txbuf = 0;
     /* Preparing the transmission buffer with R/W bit to Read. */
@@ -74,24 +76,27 @@ uint8_t ee_pmw3901mb_spi_read(uint8_t addr, uint8_t* data, size_t n){
     return 0; // Success
 }
 
-uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data, size_t n){
+uint8_t ee_pmw3901mb_spi_write(uint8_t addr, uint8_t* data){
 
     if(spi_driver == NULL) return 1; // Error: SPI Driver is NULL
-    if(n == 0U || n > 8U) return 2; // Error: Invalid length
+    if(data == NULL) return 2; // Error: Data pointer is NULL
+    if(spi_config == NULL) return 3; // Error: SPI Config is NULL
 
-    uint8_t txbuf = 0;
+    uint8_t txbuf[2U];
+
     /* Preparing the transmission buffer with R/W bit to Write. */
-    txbuf = (SPI_RW_BIT_WRITE_MASK | addr);
+    txbuf[0] = (SPI_RW_BIT_WRITE_MASK | addr);
+    
+    if(data != NULL) {
+        txbuf[1] = *data; // If data is not NULL, copy the first byte to txbuf
+    }
 
     spiStart(spi_driver, spi_config);
     spiSelect(spi_driver);
     
     /* Sending the command. The data coming back is ignored. */
-    spiSend(spi_driver, 1U, &txbuf);
-    /* Writing as many register as the value of n. */
-    // TODO: Figure out why this crashes the system!
-    //spiSend(spi_driver, n, data);
-
+    spiSend(spi_driver, 2U, &txbuf);
+    
     spiUnselect(spi_driver);
     spiStop(spi_driver);
 
