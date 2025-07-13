@@ -75,7 +75,13 @@ uint8_t ee_pmw3901mb_init_driver(void* spi_driver, void* spi_config){
     status_code = ee_pmw3901mb_power_up_reset();
     if(status_code != 0) return 1;
     
-    status_code = ee_pmw3901mb_wait_ms(50U); // Wait while system resets
+    status_code = ee_pmw3901mb_wait_ms(50U); // Wait 50 ms while system resets
+    if(status_code != 0) return 1;
+
+    status_code = ee_pmw3901mb_perf_opt();
+    if(status_code != 0) return 1;
+
+    status_code = ee_pmw3901mb_wait_ms(5U); // Wait 5 ms while system resets
     if(status_code != 0) return 1;
     
     return 0;
@@ -169,13 +175,13 @@ uint8_t ee_pmw3901mb_get_delta_x_y(int16_t* delta_x, int16_t* delta_y){
 }
 
 uint8_t ee_pmw3901mb_power_up_reset(void){
-    // TODO: Test if i should write 0x00 or 0x01
-    return ee_pmw3901mb_spi_write(REG_POWER_UP_RESET, (uint8_t[]){0x05});
+    uint8_t value = 0x5A;
+    return ee_pmw3901mb_spi_write(REG_POWER_UP_RESET, &value);
 }
 
 uint8_t ee_pmw3901mb_shutdown(void){
-    // TODO: Test if i should write 0x00 or 0x01
-    return ee_pmw3901mb_spi_write(REG_SHUTDOWN, (uint8_t[]){0x00});
+    uint8_t value = 0x00;
+    return ee_pmw3901mb_spi_write(REG_SHUTDOWN, &value);
 }
 
 uint8_t ee_pmw3901mb_get_inverse_product_id(uint8_t* inv_product_id){
@@ -183,54 +189,68 @@ uint8_t ee_pmw3901mb_get_inverse_product_id(uint8_t* inv_product_id){
     return ee_pmw3901mb_spi_read(REG_INVERSE_PRODUCT_ID, inv_product_id, 1U);
 }
 
-uint8_t ee_pmw3901mb_spi_write_perf_opt(void){
+uint8_t ee_pmw3901mb_perf_opt(void){
     uint8_t status_code = 0;
+    uint8_t value = 0x00;
 
-    // (uint8_t[]){0x00} is a temporary solution
-
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7F, (uint8_t[]){0x00});
+    value = 0x00;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7F, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x61, (uint8_t[]){0xAD});
+    value = 0xAD;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x61, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7F, (uint8_t[]){0x03});
+    value = 0x03;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7F, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x40, (uint8_t[]){0x00});
+    value = 0x00;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x40, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7F, (uint8_t[]){0x05});
+    value = 0x05;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7F, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x41, (uint8_t[]){0xB3});
+    value = 0xB3;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x41, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x43, (uint8_t[]){0xF1});
+    value = 0xF1;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x43, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x45, (uint8_t[]){0x14});
+    value = 0x14;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x45, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x5B, (uint8_t[]){0x32});
+    value = 0x32;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x5B, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x5F, (uint8_t[]){0x34});
+    value = 0x34;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x5F, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7B, (uint8_t[]){0x08});
+    value = 0x08;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7B, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7F, (uint8_t[]){0x06});
+    value = 0x06;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x7F, &value);
     if(status_code != 0) return status_code;
 
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x44, (uint8_t[]){0x1B});
+    value = 0x1B;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x44, &value);
     if(status_code != 0) return status_code;
     
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x40, (uint8_t[]){0xBF});
+    value = 0xBF;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x40, &value);
     if(status_code != 0) return status_code;
     
-    status_code = ee_pmw3901mb_spi_write(PER_REG_0x4E, (uint8_t[]){0x3F});
+    value = 0x3F;
+    status_code = ee_pmw3901mb_spi_write(PER_REG_0x4E, &value);
     if(status_code != 0) return status_code;
 
     return status_code; // Success
