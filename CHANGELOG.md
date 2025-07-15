@@ -1,10 +1,7 @@
-EngEmil_PMW3901MB_Driver
+EngEmil_PMW3901MB_ChibiOS_Driver
 =========================
 
-v0.0.1 (2025-xx-xx)
+v1.0.0 (2025-07-16)
 ------
 
-* First iteration
-* Added doxygen as documentation generator
-* Separating driver (core) and platform specific code
-
+* First release version

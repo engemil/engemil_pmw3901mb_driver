@@ -34,8 +34,6 @@ SOFTWARE.
 
 #include <stdint.h>
 #include <string.h>
-
-// Include platform dependent files here
 #include "hal.h"
 
 
@@ -44,8 +42,6 @@ extern "C"
 {
 #endif
 
-
-// Include platform dependent function headers here
 
 /**
  * @brief Initialize SPI.
