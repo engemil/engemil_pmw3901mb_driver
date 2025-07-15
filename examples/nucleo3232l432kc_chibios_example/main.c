@@ -22,6 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+
+/* IMPORTANT:
+ * - To use float support, change CHPRINTF_USE_FLOAT to TRUE in ChibiOS/os/hal/lib/streams/chprintf.h.
+ * - To use math, include <math.h> and link with -lm. (.e.g. in Makefile: ULIBS = -lm)
+ */
+
+#include <math.h>
 #include "ch.h"
 #include "hal.h"
 #include "chprintf.h"
@@ -101,6 +108,14 @@ static THD_FUNCTION(ThdBlinker, arg) {
     }
 }
 
+float calc_angle(int16_t *delta_x, int16_t *delta_y) {
+    return atan2((float) *delta_y, (float) *delta_x) * (180.0f / 3.14159265f);
+}
+
+double calc_magnitude(int16_t *delta_x, int16_t *delta_y) {
+    return sqrt((double)(*delta_x * *delta_x + *delta_y * *delta_y));
+}
+
 /* Main function */
 int main(void) {
 
@@ -130,28 +145,53 @@ int main(void) {
     chprintf(my_serial_stream, "Starting...\r\n");
 
     uint8_t product_id = 0x00;
+    int16_t delta_x = 0;
+    int16_t delta_y = 0;
     uint8_t status_code = 0x00;
 
     ee_pmw3901mb_init_driver(my_spi_driver, &my_spi_cfg);
 
+    // Product ID
+    chprintf(my_serial_stream, "Checking product ID...\r\n");
+    status_code = ee_pmw3901mb_get_product_id(&product_id);
+    if(status_code == 0){
+        chprintf(my_serial_stream, "Product ID: 0x%02X \r\n", product_id);
+    }else{
+        chprintf(my_serial_stream, "Failed to read product ID!\r\n");
+        chprintf(my_serial_stream, "Status Code: 0x%02X \r\n", status_code);
+        chprintf(my_serial_stream, "NB! System loop is stopping!\r\n");
+        while (true) {
+            chThdSleepMilliseconds(1000);
+        }
+    }
+    product_id = 0x00;
+
+
     // Main Thread
     while (true) {
 
-        chprintf(my_serial_stream, "Checking product ID...\r\n");
-
-        status_code = ee_pmw3901mb_get_product_id(&product_id);
+        // Reading X and Y values
+        status_code = ee_pmw3901mb_get_delta_x_y(&delta_x, &delta_y);
 
         if(status_code == 0){
-            chprintf(my_serial_stream, "Product ID: 0x%02X \r\n", product_id);
+            if(CHPRINTF_USE_FLOAT) {
+                chprintf(my_serial_stream, "X: %d , Y: %d , Magnitue: %f , Angle (deg.): %f \r\n", 
+                delta_x,
+                delta_y,
+                calc_magnitude(&delta_x, &delta_y),
+                calc_angle(&delta_x, &delta_y));
+            }else{
+                chprintf(my_serial_stream, "X: %d , Y: %d \r\n", delta_x, delta_y);
+            }
         }else{
-            chprintf(my_serial_stream, "Failed to read product ID!\r\n");
-            chprintf(my_serial_stream, "Status Code: 0x%02X \r\n", status_code);
+            chprintf(my_serial_stream, "Failed to read!\r\n");
+            chprintf(my_serial_stream, "Status Code: 0x%04X \r\n", status_code);
         }
-
+        delta_x = 0x00;
+        delta_y = 0x00;
         status_code = 0x00;
-        product_id = 0x00;
-
-        chThdSleepMilliseconds(1000);
+        chThdSleepMilliseconds(300);
+        
     }
 
 }

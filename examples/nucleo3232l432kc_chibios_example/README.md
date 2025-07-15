@@ -30,6 +30,9 @@ This example is with the STM32 Nucleo32 Nucleo-L432KC (STM32L432KC) board.
 
 (insert image of wiring)
 
+## Additional
+
+- Remember to set float support (`CHPRINTF_USE_FLOAT`) to TRUE in `ChibiOS/os/hal/lib/streams/chprintf.h`
 
 ## Useful Links
 
